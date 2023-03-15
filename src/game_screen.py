@@ -1,10 +1,23 @@
 import pygame
 from sys import exit
+#font=pygame.font.SysFont('Corbel',35)
+screen=pygame.display.set_mode((800,400))
+clock=pygame.time.Clock()
+
+grid1=[]
+cood=[]
+pygame.init()
+pygame.display.set_caption('BATTLESHIPS')
+test_surface=pygame.Surface((750,350))
+def make_grid(grid):
+    for row in range(5):
+        grid.append([])
+        for column in range(5):
+            grid[row].append(0)
+
+
 def g_screen():
     pygame.init()
-    screen=pygame.display.set_mode((800,400))
-    pygame.display.set_caption('BATTLESHIPS')
-    clock=pygame.time.Clock()
     test_surface= pygame.Surface((750,350))
     test_surface.fill('Black')
     while True:
@@ -14,70 +27,134 @@ def g_screen():
                 exit()
         screen.blit(test_surface,(25,25) )
         blockSize = 50 
+        i=0
+        for x in range(400, 650, 50):
+            for y in range(50, 300, 50):
+                rect = pygame.Rect(x, y, 50, 50)
+                pygame.draw.rect(screen,"green", rect,2)
         for x in range(50, 300, blockSize):
             for y in range(50, 300, blockSize):
                 rect = pygame.Rect(x, y, blockSize, blockSize)
-                pygame.draw.rect(screen,"Green", rect, 2)
+                row=int((x-50)/50)
+                col=int((y-50)/50)
+                pygame.draw.rect(screen,"white", rect, 2)
+        for i in cood:
+            
+            if x==0:
+                x=50
+            else:
+                x=(i[1]*50)+50
+            if y==0:
+                y=50
+            else:
+                y=(i[0]*50)+50
+            #x=i[0]*50
+            #y=i[1]*50
+            pygame.draw.rect(screen,'white',pygame.Rect(x,y,50,50))
+       
+        pygame.display.update()
+        clock.tick(30)
 
-        blockSize = 50 
-        for x in range(400, 650, blockSize):
-            for y in range(50, 300, blockSize):
-                rect = pygame.Rect(x, y, blockSize, blockSize)
-                pygame.draw.rect(screen,"Green", rect,2)
         
 
-        pygame.display.update()
-        clock.tick(60)
+
+         
+       
+def atk():
+    pygame.init()
+    test_surface= pygame.Surface((750,350))
+    #test_surface.fill('Black')
+    x=0
+    y=0
+    while True:
+            #attack...
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    pygame.quit()
+                    exit()
+            for event in pygame.event.get():
+                if event.type==pygame.MOUSEBUTTONDOWN:
+                    pos=pygame.mouse.get_pos()
+                    c=pos[0]
+                    r=pos[1]
+                    x=int((c-400)/50)
+                    y=int((r-50)/50)
+                    #coordinate to be sent
+                    atk=y,x
+                    print("click",c,r)
+                    print(atk)
+                    if x==0:
+                        x=400
+                    else:
+                        x=(x*50)+400
+                    if y==0:
+                        y=50
+                    else:
+                        y=(y*50)+50
+            if (x!=0) and (y!=0):
+                pygame.draw.rect(screen,'white',pygame.Rect(y,x,50,50))
+                pygame.time.delay(300)
+            pygame.display.update()
+            clock.tick(30)
+
+
+
 
 def text_ip():
     pass
-
-def main():
-    screen = pygame.display.set_mode((640, 480))
-    font=pygame.font.SysFont('Corbel',35)
-    clock = pygame.time.Clock()
-    input_box = pygame.Rect(100, 100, 140, 32)
-    color_inactive = pygame.Color('blue')
-    color_active = pygame.Color('green')
-    color = color_inactive
-    active = False
-    text = ''
-    done = False
-
-    while not done:
+def place_ships():
+    pygame.init()
+    MARGIN=5
+    WIDTH=50
+    HEIGHT=50    
+    grid1 = []
+    make_grid(grid1)
+    grid2=[]
+    count=0
+    make_grid(grid2)
+    while True:
+        
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # If the user clicked on the input_box rect.
-                if input_box.collidepoint(event.pos):
-                    # Toggle the active variable.
-                    active = not active
-                else:
-                    active = False
-                # Change the current color of the input box.
-                color = color_active if active else color_inactive
-            if event.type == pygame.KEYDOWN:
-                if active:
-                    if event.key == pygame.K_RETURN:
-                        print(text)
-                        text = ''
-                    elif event.key == pygame.K_BACKSPACE:
-                        text = text[:-1]
-                    else:
-                        text += event.unicode
-
-        screen.fill((30, 30, 30))
-        # Render the current text.
-        txt_surface = font.render(text, True, color)
-        # Resize the box if the text is too long.
-        width = max(200, txt_surface.get_width()+10)
-        input_box.w = width
-        # Blit the text.
-        screen.blit(txt_surface, (input_box.x+5, input_box.y+5))
-        # Blit the input_box rect.
-        pygame.draw.rect(screen, color, input_box, 2)
-
-        pygame.display.flip()
+            if event.type==pygame.QUIT:
+                pygame.quit()
+                exit()
+            
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                pos=pygame.mouse.get_pos()
+                c=pos[0]
+                r=pos[1]
+                print("click",pos,"Grid Coordinates:",r,c)
+                count+=1
+                row=int((r-5)/50)
+                col=int((c-5)/50)
+                print(row,col)
+                t=row,col
+                cood.append(t)
+                grid1[row][col]=1
+                #game.attack(row,col)
+            screen.fill('blue')
+            if count!=4:
+                for row in range(5):
+                    for column in range(5):
+                        color = 'WHITE'
+                        if grid1[row][column] == 1:
+                            color = 'GREEN'
+                            
+                        pygame.draw.rect(screen,
+                                        color,
+                                        [(MARGIN + WIDTH) * column + MARGIN,(MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT])
+            else:
+                pygame.time.delay(300)
+                g_screen()
+        pygame.display.update()
         clock.tick(30)
-main()
+            
+            
+            #text='SHIPS HAVE BEEN PLACED!'
+            #text=font.render("SHIPS HAVE BEEN PLACED",True,"Green")
+            #screen.blit(text,(300,300))
+                    
+       
+place_ships()
+
+

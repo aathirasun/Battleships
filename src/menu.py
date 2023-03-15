@@ -1,6 +1,6 @@
 import pygame
 from sys import exit
-from pg_lby import lobby_menu
+#from pg_lby import lobby_menu
 #from src.game_screen import g_screen
 pygame.init()
 width=800
@@ -13,7 +13,7 @@ test_surface.fill('Black')
 font=pygame.font.SysFont('Corbel',35)
 title=pygame.image.load("C:\\Users\\aathi\\OneDrive\\Desktop\\Stuff\\programs\\LAN-Game-Template-main\\img\\bs_title.png")
 title_click=pygame.image.load("C:\\Users\\aathi\\OneDrive\\Desktop\\Stuff\\programs\\LAN-Game-Template-main\\img\\bs_title_1.png")
-
+title_click_ON=pygame.image.load('C:\\Users\\aathi\\OneDrive\\Desktop\\Stuff\\programs\\LAN-Game-Template-main\\img\\bs_title_1ON.png')
 
 def collide_button(button,text,a,b):
     a,b=pygame.mouse.get_pos()
@@ -47,7 +47,7 @@ def lobby():
                 elif button_3.collidepoint(event.pos):
                     pass
                 elif button_4.collidepoint(event.pos):
-                    pass
+                    pygame.quit()
             a,b=pygame.mouse.get_pos()
             collide_button(button_1,b_text_1,a,b)
             collide_button(button_2,b_text_2,a,b)
@@ -132,7 +132,7 @@ def home_screen():
         #click to enter username
         test_surface.blit(title,(200,50))
         test_surface.blit(title_click,(200,300))
-        screen.blit(test_surface,(25,15))
+        screen.blit(test_surface,(25,25))
         #screen.blit(text_1, (325,50))
         if event.type==pygame.MOUSEBUTTONDOWN:
             if button.collidepoint(event.pos):
@@ -143,16 +143,10 @@ def home_screen():
         else:
             pygame.draw.rect(screen,'blue',button)
         screen.blit(text_button,(button.x +5 , button.y +5))
+        
         test_surface.blit(title_click,(200,300))
 
-        #text input
-        
-
-
-        
-        
-        
-
+        #text input   
         pygame.display.update()
         clock.tick(60)
 #lobby()

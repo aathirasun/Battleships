@@ -23,18 +23,30 @@ def go_online():
         if menu.is_enabled():
             menu.update(events)
             menu.draw(screen)
-    pass
+
 def play_against():
-    pass
+    opponent=menu.add.text_input('Username:',onchange='',default='opponent',maxchar=20)
+    print(opponent.get_value())
+    events=pygame.event.get()
+    while True:
+        for event in events:
+            if event.type==pygame.QUIT:
+                    pygame.quit()
+                    exit()
+        if menu.is_enabled():
+            menu.update(events)
+            menu.draw(screen)
+
+    
 def refresh():
     pass
 
 def lobby_menu():
     menu=pygame_menu.Menu('Lobby',800,400)
-    username=menu.add.text_input('Username:',onchange='',default='user',maxchar=10)
+    username=menu.add.text_input('Username:',onchange='',default='user',maxchar=20)
     print(username.get_value())
     menu.add.button('GO ONLINE',go_online)
-    menu.add.button('PLAY AGAINST AN ONLINE PLAYER',play_against())
+    menu.add.button('PLAY AGAINST AN ONLINE PLAYER',play_against)
     menu.add.button('REFRESH',refresh())
     menu.add.button('EXIT',pygame_menu.events.EXIT)
     events=pygame.event.get()
@@ -49,4 +61,4 @@ def lobby_menu():
             
             #if (menu.get_current().get_selected_widget()):
         pygame.display.update()
-              
+lobby_menu()          
