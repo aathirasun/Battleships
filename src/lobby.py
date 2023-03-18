@@ -1,8 +1,8 @@
-from src.identification import go_online, go_offline, set_username, stop_identification
-from src.identification import in_lobby, in_game, waiting_for_connection
-from src.find_users import find_online_users
-from src.game import game_server, game_client
-
+from identification import go_online, go_offline, set_username, stop_identification
+from identification import in_lobby, in_game, waiting_for_connection
+from find_users import find_online_users
+from game import game_server, game_client
+from menu import home_screen
 
 def online_users(my_username = None):
   global users
@@ -15,6 +15,37 @@ def online_users(my_username = None):
     users[i['username']] = { 'ip_address': i['ip_address'], 'status': i['status'] }
 
   return users
+def wait_online():
+  waiting_for_connection()
+  try:
+    print('waiting for incoming connection (^c to cancel)')
+    game_server(after_connect=in_game)
+  except KeyboardInterrupt:
+    in_lobby()
+    print('cancelled.')
+  in_lobby()
+def play_against_player():
+    try:
+          chosen_opponent = input('Enter opponent username (^c to cancel): ')
+          while True:
+            if chosen_opponent not in users:
+              print('No such user online.')
+            elif users[chosen_opponent]['status'] != 'waiting for connection':
+              print('Opponent not accepting connections.')
+            else:
+              break
+            chosen_opponent = input('Enter opponent username (^c to cancel): ')
+
+    except KeyboardInterrupt:
+       print('\ncancelled.')
+       #continue
+
+    chosen_opponent_ip = users[chosen_opponent]['ip_address']
+    in_game()
+    game_client(chosen_opponent_ip)
+    in_lobby()
+
+
 
 def main():
 
@@ -43,7 +74,8 @@ def main():
       user_input = input('Invalid input!\nTry again --> ')
 
     if user_input == '1':
-      waiting_for_connection()
+     wait_online()
+     ''' waiting_for_connection()
       try:
         print('waiting for incoming connection (^c to cancel)')
         game_server(after_connect=in_game)
@@ -52,9 +84,10 @@ def main():
         print('cancelled.')
         continue
       in_lobby()
-    
+    '''
     elif user_input == '2':
-      try:
+      play_against_player()
+      '''try:
         chosen_opponent = input('Enter opponent username (^c to cancel): ')
         while True:
           if chosen_opponent not in users:
@@ -72,7 +105,7 @@ def main():
       chosen_opponent_ip = users[chosen_opponent]['ip_address']
       in_game()
       game_client(chosen_opponent_ip)
-      in_lobby()
+      in_lobby()'''
 
     elif user_input == '3':
         # next iteration will print the new online users
@@ -84,3 +117,4 @@ def main():
   go_offline()
   stop_identification()
   print('Program Closed.')
+home_screen()
